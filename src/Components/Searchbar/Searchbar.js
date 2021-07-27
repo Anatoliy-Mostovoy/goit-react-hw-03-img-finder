@@ -20,7 +20,7 @@ export class Searchbar extends Component {
 
   render() {
     return (
-      <div className={s.Searchbar}>
+      <header className={s.Searchbar}>
         <form className={s.SearchForm} onSubmit={this.handleSubmit}>
           <button className={s.SearchFormButton} type="submit"></button>
           <label>
@@ -29,10 +29,11 @@ export class Searchbar extends Component {
               type="text"
               value={this.state.inputValue}
               onChange={this.handleInputChange}
+              placeholder="Search images and photos"
             />
           </label>
         </form>
-      </div>
+      </header>
     );
   }
 }
