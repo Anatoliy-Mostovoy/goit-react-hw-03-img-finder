@@ -16,40 +16,41 @@ export class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { inputValue, currentPage } = this.state;
+    const { inputValue } = this.state;
 
-    if (
-      prevState.inputValue !== inputValue ||
-      prevState.currentPage !== currentPage
-    ) {
-      const fetcher = async () => {
-        try {
-          this.setState({ loading: true });
-          const imgs = await fetchImgs(inputValue, currentPage);
-          this.setState({
-            imgs: [...prevState.imgs, ...imgs.data.hits],
-            loading: false,
-          });
-          window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            behavior: 'smooth',
-          });
-        } catch (error) {
-          this.setState({ errors: error.response.data, loading: false });
-        }
-      };
-      fetcher();
+    if (prevState.inputValue !== inputValue) {
+      this.fetcher();
     }
   }
+
+  fetcher = async () => {
+    const { inputValue, currentPage } = this.state;
+    try {
+      this.setState({ loading: true });
+      const imgs = await fetchImgs(inputValue, currentPage);
+      this.setState(prevState => ({
+        imgs: [...prevState.imgs, ...imgs.data.hits],
+        currentPage: currentPage + 1,
+        loading: false,
+      }));
+
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    } catch (error) {
+      this.setState({ errors: error.response.data, loading: false });
+    }
+  };
 
   formSubmit = data => {
     this.setState({ inputValue: data.trim(), currentPage: 1, imgs: [] });
   };
 
-  nextPage = event => {
-    const { currentPage } = this.state;
-    this.setState({ currentPage: currentPage + 1 });
-  };
+  // nextPage = event => {
+  //   const { currentPage } = this.state;
+  //   this.setState({ currentPage: currentPage + 1 });
+  // };
 
   render() {
     const { loading, errors, imgs } = this.state;
@@ -60,20 +61,35 @@ export class App extends Component {
         {errors ? <h2>{errors}</h2> : <ImageGallery imgs={imgs} />}
         {loading && <CustomLoader />}
 
-        <MoreButton nextPage={this.nextPage} />
+        <MoreButton nextPage={this.fetcher} />
       </div>
     );
   }
 }
 
-// componentDidMount() {
-//   const fetcher = async () => {
-//     try {
-//       const imgs = await fetchImgs();
-//       this.setState({ imgs: imgs.data.hits, loading: false });
-//     } catch (error) {
-//       this.setState({ errors: error.response.data, loading: false });
-//     }
-//   };
-//   fetcher();
+// componentDidUpdate(prevProps, prevState) {
+//   const { inputValue, currentPage } = this.state;
+
+//   if (
+//     prevState.inputValue !== inputValue ||
+//     prevState.currentPage !== currentPage
+//   ) {
+//     const fetcher = async () => {
+//       try {
+//         this.setState({ loading: true });
+//         const imgs = await fetchImgs(inputValue, currentPage);
+//         this.setState({
+//           imgs: [...prevState.imgs, ...imgs.data.hits],
+//           loading: false,
+//         });
+//         window.scrollTo({
+//           top: document.documentElement.scrollHeight,
+//           behavior: 'smooth',
+//         });
+//       } catch (error) {
+//         this.setState({ errors: error.response.data, loading: false });
+//       }
+//     };
+//     fetcher();
+//   }
 // }
