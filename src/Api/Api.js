@@ -5,6 +5,6 @@ const URL = 'https://pixabay.com/api';
 
 export const fetchImgs = async (inputValue, currentPage = 1) => {
   return await axios.get(
-    `${URL}/?q=${inputValue}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=3`,
+    `${URL}/?q=${inputValue}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`,
   );
 };
