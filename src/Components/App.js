@@ -20,7 +20,6 @@ export class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { inputValue } = this.state;
-
     if (prevState.inputValue !== inputValue) {
       this.fetcher();
     }
@@ -28,11 +27,9 @@ export class App extends Component {
 
   fetcher = async () => {
     const { inputValue, currentPage } = this.state;
-
     if (inputValue === '') {
       return;
     }
-
     try {
       this.setState({ loading: true });
       const imgs = await fetchImgs(inputValue, currentPage);
@@ -41,7 +38,6 @@ export class App extends Component {
         currentPage: currentPage + 1,
         loading: false,
       }));
-
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
@@ -65,7 +61,6 @@ export class App extends Component {
 
   render() {
     const { loading, errors, imgs, showModal, imgModal } = this.state;
-
     return (
       <div className={s.App}>
         <Searchbar onSubmit={this.formSubmit} />
