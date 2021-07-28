@@ -4,6 +4,7 @@ import { fetchImgs } from '../Api/Api';
 import { CustomLoader } from './Loader/Loader';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Modal } from './Modal/Modal';
 import { MoreButton } from './Button/Button';
 
 export class App extends Component {
@@ -13,6 +14,8 @@ export class App extends Component {
     errors: null,
     loading: false,
     currentPage: 1,
+    showModal: false,
+    imgModal: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -52,15 +55,32 @@ export class App extends Component {
     this.setState({ inputValue: data.trim(), currentPage: 1, imgs: [] });
   };
 
+  openModal = largeImageURL => {
+    this.setState({ showModal: true, imgModal: largeImageURL });
+  };
+
+  closeModal = event => {
+    this.setState({ showModal: false, imgModal: '' });
+  };
+
   render() {
-    const { loading, errors, imgs } = this.state;
+    const { loading, errors, imgs, showModal, imgModal } = this.state;
+
     return (
       <div className={s.App}>
         <Searchbar onSubmit={this.formSubmit} />
-
-        {errors ? <h2>{errors}</h2> : <ImageGallery imgs={imgs} />}
+        {errors ? (
+          <h2>{errors}</h2>
+        ) : (
+          <ImageGallery imgs={imgs} onImgClick={this.openModal} />
+        )}
         {loading && <CustomLoader />}
         {imgs.length > 0 && <MoreButton nextPage={this.fetcher} />}
+        {showModal && (
+          <Modal closeModal={this.closeModal}>
+            <img src={imgModal} alt="img" />
+          </Modal>
+        )}
       </div>
     );
   }

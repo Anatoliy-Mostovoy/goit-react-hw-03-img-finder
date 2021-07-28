@@ -1,6 +1,6 @@
 import s from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({ imgs }) => {
+export const ImageGalleryItem = ({ imgs, onImgClick }) => {
   return (
     <>
       {imgs.map(img => {
@@ -10,6 +10,7 @@ export const ImageGalleryItem = ({ imgs }) => {
               src={img.webformatURL}
               alt={img.tags}
               className={s.ImageGalleryItemImage}
+              onClick={() => onImgClick(img.largeImageURL)}
             />
           </li>
         );
